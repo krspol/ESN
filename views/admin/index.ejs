@@ -1,0 +1,24 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3>Lista sesji</h3>
+	<% sessions.forEach(function(session) { %>
+      <div>
+        <a href="/admin/session/<%= session.id %>"> <li> <%= session.name %> </li></a>
+      </div>
+    <% }) %>
+	
+	<p>
+		<a href="/admin/session/"><input type="submit" value="Nowa sesja" /> </a>
+	</p>
+  </body>
+</html>

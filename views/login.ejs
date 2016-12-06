@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <h1>SEKIURITY GEJT</h1>
+	
+	
+	<%if ( !success) { 
+		 errors.forEach(function(error){ %>
+			<li><%=error.msg%></li>
+		
+	<% });
+		if( notAuth == true){ %>
+		<li>Zly login lub haslo</li>
+		<%}
+	} %>
+	
+	
+    <form action='/login' method='post'>
+      <p>
+        <input type='text' name='user[username]' placeholder='username' />
+      </p>
+      <p>
+        <input type='password' name='user[password]' placeholder='password' />
+      </p>
+      <p>
+        <input type='submit' value='Try to log in' />
+      </p>
+    </form>
+  </body>
+</html>

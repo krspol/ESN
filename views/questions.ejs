@@ -1,0 +1,22 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3><%=title%></h3>
+	
+	<% questions.forEach(function(question) {%>
+			<div>
+				<a href="question/<%= question.id %>"> <li> <%= question.text %> </li></a>
+			</div>
+	<% }) %>
+	
+  </body>
+</html>

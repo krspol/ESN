@@ -1,0 +1,55 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+	
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/admin/session/<%= sessionId %>/questions">Wroc do wszystkich pytan w sesji</a></p>
+	<p><a href="/admin/session/<%= sessionId %>">Wroc do ustawien sesji</a></p>
+	<p><a href="/admin">Wroc do listy sesji</a></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3><%=title%></h3>
+	
+		<div id='dziala'></div>
+		<form action="/admin/sessions/<%= sessionId %>/question/" method="POST">
+			<input type="hidden" name="question[sessionId]" />
+			
+			<p>
+				<label for="question[text]">Tresc pytania:</label>
+				<input id="question[text]" name="question[text]" />
+			</p>
+			
+			<p>
+			<label for="question[date]">Dzisiejsza data</label>
+			<input id="question[date]" name="question[date]" />
+			</p>
+			
+			<p>
+			<label for="answer1[text]">Tresc odpowiedzi1:</label>
+			<input id="answer1[text]" name="answer1[text]" />
+			</p>
+			
+			<p>
+			<label for="answer2[text]">Tresc odpowiedzi2:</label>
+			<input id="answer2[text]" name="answer2[text]" />
+			</p>
+			
+			<p>
+			<input type="radio" name="question[active]" value="true" checked> Pytanie widoczne dla innych<br>
+			<input type="radio" name="question[active]" value="false"> Pytanie niewidoczne dla innych<br>
+			</p>
+			
+			<p>
+				<input type="submit" value="dodaj pytanie" />
+			</p>
+		</form>
+			
+		
+  </body>
+</html>

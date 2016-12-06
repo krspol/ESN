@@ -1,0 +1,48 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+	<style>
+		body{
+			
+		}
+		.readonly{
+			background-color:#eff;
+		}
+	</style>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/admin">Wroc do listy sesji</a></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3>Nowa sesja!</h3>
+      <div>
+        <form action="/admin/session" method="POST">
+			<input type="hidden" name="session[moderator]" value="<%= s_user.username %>"/>
+			<label for="session[name]">Nazwa sesji:</label>
+			<input id="session[name]" name="session[name]" />
+			
+			<label for="session[date]">Data stworzenia:</label>
+			<input id="session[date]" name="session[date]" placeholder="DD/MM/YYYY"/>
+			
+			<label for="session[kworum]">Kworum:</label>
+			<input id="session[kworum]" name="session[kworum]" placeholder="%" />
+			
+			
+			<p>
+			Sesja widoczna dla innych<br />
+			<input type="radio" name="session[active]" value="true" checked> Tak<br>
+			<input type="radio" name="session[active]" value="false"> Nie<br>
+			</p>
+			
+			<input type="submit" value="Stworz sesje" />
+		
+		
+		</form>
+      </div>
+  </body>
+</html>

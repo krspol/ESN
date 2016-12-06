@@ -1,0 +1,49 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+	<style>
+		body{
+			
+		}
+		.readonly{
+			background-color:#eff;
+		}
+	</style>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/admin">Wroc do listy sesji</a></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3>Edycja sesji</h3>
+      <div>
+        <form action="" method="POST">
+			<label for="session[name]">Nazwa sesji:</label>
+			<input id="session[name]" name="session[name]" value="<%=session.name%>" readonly="readonly" class="readonly" />
+			
+			<label for="session[id]">Identyfikator sesji:</label>
+			<input id="session[id]" name="session[id]" value="<%=session.id%>" readonly="readonly" style="readOnly" class="readonly"/>
+			
+			<label for="session[active]">Aktywna sesja:</label>
+			<input id="session[active]" name="session[active]" value="<%=session.active%>" />
+			
+			<label for="session[date]">Data stworzenia:</label>
+			<input id="session[date]" name="session[date]" value="<%=session.date%>" />
+			
+			<label for="session[kworum]">Kworum:</label>
+			<input id="session[kworum]" name="session[kworum]" value="<%=session.kworum%>" />
+			
+			<input type="submit" value="Edytuj ustawienia" />
+		
+		
+		</form>
+      </div>
+	  <div>
+		<p><a href="/admin/session/<%=session.id%>/questions">Wyswietl wszystkie pytania w sesji</a></p>
+	  <div>
+  </body>
+</html>

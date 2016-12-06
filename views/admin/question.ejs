@@ -1,0 +1,53 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+	
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/admin/session/<%= sessionId %>/questions">Wroc do wszystkich pytan w sesji</a></p>
+	<p><a href="/admin/session/<%= sessionId %>">Wroc do ustawien sesji</a></p>
+	<p><a href="/admin">Wroc do listy sesji</a></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3><%=title%></h3>
+	
+
+		<form action="/admin/question/11?edit=question" method="POST">
+			<input type="hidden" name="question[sessionId]" value="<%= sessionId %>" />
+			<input type="hidden" name="question[id]" value="<%= question.id %>" />
+			
+			<label for="question[text]">Tresc pytania:</label>
+			<input id="question[text]" name="question[text]" value="<%= question.text %>" />
+			
+			<input id="question[date]" name="question[date]" value="<%= question.date %>" />
+			<p>
+			<input type="radio" name="question[active]" value="true" checked> Pytanie widoczne dla innych<br>
+			<input type="radio" name="question[active]" value="false"> Pytanie niewidoczne dla innych<br>
+			</p>
+			<input type="submit" value="Edytuj pytanie" />
+		</form>
+		<p><h3>Odpowiedzi</h3></p>
+		
+		<% answers.forEach(function(answer) { 
+			if(answer.text){ %>
+				<form action="/admin/question/11?edit=answer" method="POST">
+					<input type="hidden" name="answer[questionId]" value="<%= question.id %>" />
+					<input type="hidden" name="answer[id]" value="<%= answer.id %>" />
+					<div>	
+						<p>
+							<label for="answer[text]">Tresc odpowiedzi:</label>
+							<input id="answer[text]" name="answer[text]" value="<%= answer.text %>" />
+							<input type="submit" value="Edytuj odpowiedz" />
+						</p>
+					</div>
+				</form>
+		<% }}) %>
+			
+		
+  </body>
+</html>

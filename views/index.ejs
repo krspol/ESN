@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	
+	<div>
+		<form action="/" method="POST">
+			<input type="text" name="qrcode" placeholder="qr code" />
+			<input type="submit" value="log in to session" />
+		</form>
+	</div>
+  </body>
+</html>

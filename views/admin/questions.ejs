@@ -1,0 +1,27 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/admin/session/<%= sessionId %>">Wroc do ustawien sesji</a></p>
+	<p><a href="/admin">Wroc do listy sesji</a></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+	
+	<h3><%=title%></h3>
+	
+	<% questions.forEach(function(question) { %>
+		<div>
+			<a href="/admin/question/<%= question.id %>"> <li> <%= question.text %> </li></a>
+		</div>
+	<% }) %>
+	
+	<p>
+		<a href="/admin/sessions/<%= sessionId %>/question"><input type="submit" value="Nowe pytnaie" /> </a>
+	</p>
+  </body>
+</html>
