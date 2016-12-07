@@ -28,36 +28,47 @@ exports.mainPage = function (req, resp, err) { // TODO
     if(!req.session.s_user)
         resp.redirect('/login');
 
-    sessions.getAll(0,2,function (err, sessions) { // TODO set range of list
 
-        resp.render('index', {
-            title : 'Panel uzytkownika',
-            notAuth: req.session.notAuth,
-            s_user: req.session.s_user
-        });
-
+    resp.render('index', {
+        title: 'Panel uzytkownika',
+        notAuth: req.session.notAuth,
+        s_user: req.session.s_user
     });
 
+};
 
+exports.init = function (req, resp, next) {
+        var s_user = req.session.s_user;
+        if(!s_user || s_user.role == '')
+            resp.redirect('/login');
+        else if(s_user.role == 'admin')
+            resp.redirect('/admin');
+        else if(s_user.role == 'user')
+            resp.redirect('/user');
+        else
+            resp.send(401);
 
 };
 
 exports.qrSubmit = function (req, resp, next) {
     var qrcode = req.body.qrcode;
     var questions = [];
-
+    req.session.sessionId = qrcode;
     question.getAllBySessionId(qrcode, 0, 100, function (err, questionss) {
         if(err) throw err;
+
         questionss.forEach(function (item) {
             if(item.active == 'true')
                 questions.push(item);
 
         });
+
+        console.log('sessionId ' + qrcode);
         resp.render('questions', {
             title : 'Dostepne pytania',
             notAuth: req.session.notAuth,
             s_user: req.session.s_user,
-            sessionId: qrcode,
+            sessionId: req.session.sessionId,
             questions: questions
         });
 

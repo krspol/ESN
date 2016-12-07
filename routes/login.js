@@ -45,7 +45,7 @@ exports.submit = function(req, resp, next){
                 if(user.role == 'admin')
                     resp.redirect('/admin');
                 else
-                    resp.redirect('/');
+                    resp.redirect('/user/');
 
             } else {
                 req.session.errors = [];

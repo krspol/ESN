@@ -5,6 +5,8 @@ var expressValidator = require('express-validator');
 var quard = require('./lib/guard');
 
 var index = require('./routes/index');
+
+var userQuestion = require('./routes/question');
 var adminIndex = require('./routes/admin/index');
 var adminSessions = require('./routes/admin/sessions');
 var adminQuestion = require('./routes/admin/question');
@@ -22,16 +24,20 @@ app.use(expressValidator());
 app.use(express.methodOverride());
 app.use(express.cookieParser('esncookie'));
 app.use(express.session());
-app.use('/admin/', quard.check);
+app.use('/', quard.setSessions);
+app.use('/admin/', quard.checkAdmin);
+app.use('/user/', quard.checkUser);
 app.use(app.router);
 
+app.get('/', index.init);
 app.get('/login', login.form);
 app.post('/login', login.submit);
 app.get('/logout', login.logout);
-app.get('/', index.mainPage);
-app.post('/', index.qrSubmit);
+app.get('/user', index.mainPage);
+app.post('/user/session', index.qrSubmit);
 // USER
-
+app.get('/user/session/:sessionId/question/:id', userQuestion.questionForm);
+app.post('/user/session/:sessionId/question/:id', userQuestion.questionSubmit);
 
 
 // ADMIN

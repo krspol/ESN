@@ -14,7 +14,7 @@
 	
 	<% questions.forEach(function(question) {%>
 			<div>
-				<a href="question/<%= question.id %>"> <li> <%= question.text %> </li></a>
+				<a href="/user/session/<%=sessionId%>/%>question/<%= question.id %>"> <li> <%= question.text %> </li></a>
 			</div>
 	<% }) %>
 	

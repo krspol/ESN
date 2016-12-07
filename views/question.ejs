@@ -1,0 +1,31 @@
+<!-- Admin index page-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Jestes zalogowany jako,  <%= s_user.username %></p>
+	<p><a href="/logout">Wyloguj sie</a></p>
+
+	<h3><%=title%></h3>
+	<div>
+        <h3>Tresc pytania: <i><%=question.text%></i></h3>
+        <% answers.forEach(function(answer){
+            if(answer.text != undefined){%>
+
+        <form action="" method="POST">
+            <p>
+                <input type="hidden" name="answer[id]" value="<%=answer.id%>" />
+                <input name="answer[text]" type="submit" value="<%=answer.text%>" />
+            </p>
+        </form>
+
+        <%}})%>
+
+    </div>
+
+  </body>
+</html>
