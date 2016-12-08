@@ -13,7 +13,20 @@
 	<h3>Lista sesji</h3>
 	<% sessions.forEach(function(session) { %>
       <div>
-        <a href="/admin/session/<%= session.id %>"> <li> <%= session.name %> </li></a>
+        <a href="/admin/session/<%= session.id %>"> <li> <%= session.name %> </a>
+		<% if(session.active == 'true'){ %>
+			<br>
+			<form action="/admin/session/<%= session.id %>/active" method="POST">
+				s:aktywna <input type="submit" value="Dezaktywuj" />
+			</form>
+			
+		<%}else{%>
+			<br>
+			<form action="/admin/session/<%= session.id %>/active" method="POST">
+				s:nieaktywna <input type="submit" value="Aktywuj" />
+			</form>
+			
+		<%}%></li>
       </div>
     <% }) %>
 	

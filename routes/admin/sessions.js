@@ -15,6 +15,7 @@ exports.newSessionSubmit = function (req, resp, next) {
 
 
     new session({
+        id: null,
         name: dataSession.name,
         date: dataSession.date,
         active: dataSession.active,
@@ -33,14 +34,14 @@ exports.sessionSubmit = function (req, resp, next) {
 
     session.getById(dataSession.id, function (err, sess) {
         if(err) throw err;
-        sess.remove(function (err) {
+        sess.remove(function (err, counter) {
             if(err) throw err;
-            new session({ // TODO we can replace it by 'dataSession'
+            new session({
                 id: dataSession.id,
                 name: dataSession.name,
                 date: dataSession.date,
-                kworum: dataSession.kworum,
-                active: dataSession.active
+                active: dataSession.active,
+                kworum: dataSession.kworum
             }).update(function (err) {
                 if (err) return err;
 
@@ -79,7 +80,7 @@ exports.questionList = function (req, resp, next) {
 
     var sessionId = req.param('id');
 
-    question.getAllBySessionId(sessionId, 0, 100, function (err, questions) { // TODO set range of list
+    question.getAllBySessionId(sessionId, 0, -1, function (err, questions) {
         if (err) throw err;
         if (true) { // TODO check if sessionId is corrent and exist in db
             console.log('ilosc pytan: ' + questions.length);
@@ -95,3 +96,30 @@ exports.questionList = function (req, resp, next) {
     });
 
 };
+
+exports.sessionActivity = function (req, resp, next) {
+    var sessionId = req.param('id');
+
+    session.getById(sessionId, function (err, sess) {
+        if(err) throw err;
+        sess.remove(function (err) {
+            if(err) throw err;
+            console.log(sess);
+            if(sess.active == 'true')
+                sess.active = 'false';
+            else
+                sess.active = 'true';
+            console.log(sess);
+            sess.update(function (err) {
+                if(err) throw err;
+                resp.redirect('/admin');
+            });
+
+        });
+    });
+
+
+};
+
+
+

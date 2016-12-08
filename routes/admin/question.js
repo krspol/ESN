@@ -4,12 +4,11 @@
 var question = require('../../lib/question');
 var answer = require('../../lib/answer');
 var url = require('url');
-
+var express = require('express');
+var flow = require('nimble');
 
 exports.newQuestionForm = function (req, resp, next) {
-    var user = req.session.s_user;
-    if(!user)
-        resp.send(401); // not logged
+
     resp.render('admin/new-question', {
         title: 'Dodawanie pytan',
         s_user: req.session.s_user,
@@ -19,49 +18,53 @@ exports.newQuestionForm = function (req, resp, next) {
 };
 
 exports.newQuestionSubmit = function (req, resp, next) {
-    var user = req.session.s_user;
-    if(!user)
-        resp.send(401); // not logged
-
+    // TODO we should do flexible for more questions
     var dataQuestion = req.body.question;
-    var dataAnswer = req.body.answer1;
-    var dataAnswer2 = req.body.answer2;
+    var howManyAnswers = 2; // req.body.answerCounter;
 
+    var answers = [req.body.answer1, req.body.answer2];
+    var answersObj = [];
     var sessionId = req.session.sessionId;
-    var answerObj = new answer({
-        text: dataAnswer.text
+
+    answers.forEach(function (ans) {
+        answersObj.push(
+            new answer({
+                text: ans.text
+            })
+        );
     });
-    var answer2Obj = new answer({
-        text: dataAnswer2.text
-    });
+
     var questionObj = new question({
         text: dataQuestion.text,
         date: dataQuestion.date,
         sessionId: dataQuestion.sessionId,
         active: dataQuestion.active
     });
+    var counter = 0;
     questionObj.save(sessionId, function (err, questionId) {
-        if(err) throw err;
-        console.log('Pomyslnie dodano pytanie');
+        if (err) throw err;
 
-        answerObj.save(questionId, function (err) {
-            if(err) throw err;
-            console.log('Pomyslnie dodano odpowiedz1');
-
-            answer2Obj.save(questionId, function (err) {
-                if(err) throw err;
-                console.log('Pomyslnie dodano odpowiedz2');
-                resp.redirect('/admin/session/'+ sessionId +'/questions');
-            });
-        });
-
+        flow.series([
+            function (callback) {
+                answersObj.forEach(function (ans) {
+                    ans.save(questionId, function (err) {
+                        if (err) return fn(err);
+                    });
+                });
+                callback();
+            },
+            function (callback) {
+                resp.redirect('/admin/session/' + sessionId + '/questions');
+                callback();
+            }]);
 
     });
-
 };
 
-
-
+this.doAndRedirect = function (err, url, resp, fn) {
+    if (err) throw err;
+    resp.redirect('/admin/session/' + sessionId + '/questions');
+}
 exports.questionSubmit = function (req, resp, next) {
     var url1 = url.parse(req.url);
     var query = url1.query;
@@ -69,39 +72,39 @@ exports.questionSubmit = function (req, resp, next) {
     var key = splittedQuery[0], value = splittedQuery[1];
 
     // TODO (?) maybe make only one form (?)
-    switch(value){
+    switch (value) {
         case 'answer':
             var dataAnswer = req.body.answer;
             answer.getById(dataAnswer.id, function (err, ans) {
-                if(err) throw err;
-               ans.remove(function (err) {
-                   if(err) throw err;
-                   new answer({
-                       text: dataAnswer.text,
-                       questionId: dataAnswer.questionId,
-                       id: dataAnswer.id
-                   }).update(function (err) {
-                       if(err) return err;
-                       console.log('Odpowiedz pomyslnie zmodyfikowana');
-                       resp.redirect('/admin/question/'+dataAnswer.questionId);
-                   });
-               })
+                if (err) throw err;
+                ans.remove(function (err) {
+                    if (err) throw err;
+                    new answer({
+                        text: dataAnswer.text,
+                        questionId: dataAnswer.questionId,
+                        id: dataAnswer.id
+                    }).update(function (err) {
+                        if (err) return err;
+                        console.log('Odpowiedz pomyslnie zmodyfikowana');
+                        resp.redirect('/admin/question/' + dataAnswer.questionId);
+                    });
+                })
             });
             break;
         case 'question':
             var dataQuestion = req.body.question;
             question.getById(dataQuestion.id, function (err, quest) {
-                if(err) throw err;
+                if (err) throw err;
                 quest.remove(function (err) {
-                    if(err) throw err;
+                    if (err) throw err;
                     new question({
                         text: dataQuestion.text,
                         date: dataQuestion.date,
                         sessionId: dataQuestion.sessionId,
                         active: dataQuestion.active,
                         id: dataQuestion.id
-                    }).update( function (err) {
-                        if(err) throw err;
+                    }).update(function (err) {
+                        if (err) throw err;
                         console.log('Pomyslnie zmieniono pytanie');
                         resp.redirect('/admin/session/' + dataQuestion.sessionId + '/questions');
                     });
@@ -109,17 +112,18 @@ exports.questionSubmit = function (req, resp, next) {
             });
 
             break;
-    };
-} ;
+    }
+    ;
+};
 
 exports.questionForm = function (req, resp, next) {
 
     var questionId = req.param('id');
 
     question.getById(questionId, function (err, question) {
-        if(err) throw err; // TODO
-        if(question){
-            answer.getAllByQuestionId(questionId, 0, 2, function (err, answers) { // TODO set range
+        if (err) throw err; // TODO
+        if (question) {
+            answer.getAllByQuestionId(questionId, 0, -1, function (err, answers) {
 
                 resp.render('admin/question', {
                     title: 'Edycja tresci pytania',
@@ -130,7 +134,7 @@ exports.questionForm = function (req, resp, next) {
                 });
             });
 
-        }else{
+        } else {
             resp.send(404); // if record doesn't exist
         }
     });

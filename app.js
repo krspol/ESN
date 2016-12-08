@@ -3,7 +3,6 @@ var login = require('./routes/login');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var quard = require('./lib/guard');
-
 var index = require('./routes/index');
 
 var userQuestion = require('./routes/question');
@@ -45,6 +44,7 @@ app.get('/admin', adminIndex.mainPage);
 app.get('/admin/session', adminSessions.newSessionForm);
 app.post('/admin/session', adminSessions.newSessionSubmit);
 app.get('/admin/session/:id', adminSessions.sessionForm);
+app.post('/admin/session/:id/active', adminSessions.sessionActivity);
 app.get('/admin/sessions/:id/question', adminQuestion.newQuestionForm);
 app.post('/admin/sessions/:id/question', adminQuestion.newQuestionSubmit);
 app.post('/admin/session/:id', adminSessions.sessionSubmit);
