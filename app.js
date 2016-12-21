@@ -9,10 +9,11 @@ var userQuestion = require('./routes/question');
 var adminIndex = require('./routes/admin/index');
 var adminSessions = require('./routes/admin/sessions');
 var adminQuestion = require('./routes/admin/question');
-
+var adminResults = require('./routes/admin/results');
 
 var app = express();
-app.set('port', 3000);
+var io = require('socket.io').listen(app.listen(3001));
+app.set('socketio', io);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.use(express.favicon(__dirname + '/public/fav.ico'));
@@ -48,7 +49,12 @@ app.post('/admin/session/:id/active', adminSessions.sessionActivity);
 app.get('/admin/sessions/:id/question', adminQuestion.newQuestionForm);
 app.post('/admin/sessions/:id/question', adminQuestion.newQuestionSubmit);
 app.post('/admin/session/:id', adminSessions.sessionSubmit);
-app.get('/admin/session/:id/questions', adminSessions.questionList)
+app.get('/admin/session/:id/questions', adminSessions.questionList);
 app.get('/admin/question/:id', adminQuestion.questionForm);
 app.post('/admin/question/:id', adminQuestion.questionSubmit);
-app.listen(3000);
+app.get('/admin/question/results/:id', adminResults.showResults);
+
+
+io.on('connection', function (socket) {
+    console.log('a user connected');
+});
